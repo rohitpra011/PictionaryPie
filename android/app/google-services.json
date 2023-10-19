@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1059061669548",
+    "project_id": "slideshow-fd4a8",
+    "storage_bucket": "slideshow-fd4a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059061669548:android:02ca062c4430fa44504909",
+        "android_client_info": {
+          "package_name": "com.example.slideshow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJ5n1IvdSe9xHtNPiEtAq3KZhMAz4xA1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
