@@ -1,17 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_database/firebase_database.dart';
+import '../model/user_model.dart';
+import 'home_screen.dart';
+import 'login_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
-
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey= GlobalKey<FormState>();
-  
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  DatabaseReference ref = FirebaseDatabase.instance.ref('Users');
   // editing Controller
   final firstNameEditingController = new TextEditingController();
   final secondNameEditingController = new TextEditingController();
@@ -222,11 +226,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       try {
         await _auth
             .createUserWithEmailAndPassword(email: email, password: password)
-            //.then((value) => {postDetailsToFirestore()})
-            .whenComplete(() => Fluttertoast.showToast(msg:"Signup successful please login")
-        )
+            .then((value) => {postDetailsToFirestore()})
+            .whenComplete((){
+          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          var snackBar=  SnackBar(content: Text('Registered succesfully please login'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+        })
             .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
+          //Fluttertoast.showToast(msg: e!.message);
         });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
@@ -251,9 +259,34 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage!);
+       // Fluttertoast.showToast(msg: errorMessage!);
         print(error.code);
       }
     }
+  }
+
+  postDetailsToFirestore() async {
+    // calling our firestore
+    // calling our user model
+    // sedning these values
+
+    //FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = _auth.currentUser;
+
+    UserModel userModel = UserModel();
+
+    // writing all the values
+    userModel.email = user!.email;
+    userModel.uid = user.uid;
+    userModel.firstName = firstNameEditingController.text;
+    userModel.secondName = secondNameEditingController.text;
+    userModel.purchasedCategories= {0:"cat0"};
+    // await firebaseFirestore
+    //     .collection("users")
+    //     .doc(user.uid)
+    //     .set(userModel.toMap());
+    //Fluttertoast.showToast(msg: "Account created successfully :) ");
+    await ref.child(user.uid).set(userModel.toMap());
+    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => HomeScreen()), (route) => false);
   }
 }

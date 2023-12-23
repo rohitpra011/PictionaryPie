@@ -1,23 +1,20 @@
+//import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:slideshow/screens/login_screen.dart';
-
+import 'package:device_info_plus/device_info_plus.dart';
 import 'firebase_options.dart';
-
-
 // void main() {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   runApp(Delta(
 //     model: ProductDataModel(),
 //   ));
 // }
-
-
-
-
 //Future<void>
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+ // await FirebaseAppCheck.instance.activate();
   //await Firebase.initializeApp();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -52,7 +49,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home:
+      const LoginScreen(),
     );
   }
 }

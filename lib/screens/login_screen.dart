@@ -1,17 +1,23 @@
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:slideshow/screens/home_screen.dart';
 import 'package:slideshow/screens/registration_screen.dart';
+import 'package:slideshow/screens/testing.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatefulWidget
+{
   const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+{
+
   final _formKey= GlobalKey<FormState>();
   final TextEditingController emailController= new TextEditingController();
   final TextEditingController passwordController= new TextEditingController();
@@ -19,20 +25,23 @@ class _LoginScreenState extends State<LoginScreen> {
   // string for displaying the error Message
   String? errorMessage;
   @override
-  Widget build(BuildContext context) {
-
+  Widget build(BuildContext context)
+  {
 //Email input field
     final emailField = TextFormField(
       autofocus: false,
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
-      validator: (value){
-        if(value!.isEmpty){
+      validator: (value)
+      {
+        if(value!.isEmpty)
+        {
           return("Please a enter valid email");
         }
         // reg expression for email validation
         if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-            .hasMatch(value)) {
+            .hasMatch(value))
+        {
           return ("Please Enter a valid email");
         }
         return null;
@@ -52,7 +61,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-
 //Password input field
     final passwordField = TextFormField(
       autofocus: false,
@@ -60,10 +68,12 @@ class _LoginScreenState extends State<LoginScreen> {
       obscureText: true,
       validator: (value) {
         RegExp regex = new RegExp(r'^.{6,}$');
-        if (value!.isEmpty) {
+        if (value!.isEmpty)
+        {
           return ("Password is required for login");
         }
-        if (!regex.hasMatch(value)) {
+        if (!regex.hasMatch(value))
+        {
           return ("Enter Valid Password(Min. 6 Character)");
         }
       },
@@ -102,10 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
     );
-
-
-
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -150,21 +156,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: <Widget>[
                         const Text("Don't have an account?"),
                         GestureDetector(onTap: (){
+
                           Navigator.push(context, MaterialPageRoute(builder: (context) => const RegistrationScreen()));
                         },
                         child: const Text("Signup",style: TextStyle(color: Colors.redAccent,fontWeight: FontWeight.w600, fontSize: 15),),)
                       ],
                     )
-
-
-
-
                     ],
-
                 ),
               ),
             ),
-
           ),
         ),
       ),
@@ -176,9 +177,9 @@ class _LoginScreenState extends State<LoginScreen> {
         await _auth
             .signInWithEmailAndPassword(email: email, password: password)
             .then((uid) => {
-          Fluttertoast.showToast(msg: "Login Successful"),
+          //Fluttertoast.showToast(msg: "Login Successful"),
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const HomeScreen())),
+              MaterialPageRoute(builder: (context) =>  HomeScreen())),
         });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
@@ -203,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        Fluttertoast.showToast(msg: errorMessage!);
+       // Fluttertoast.showToast(msg: errorMessage!);
         print(error.code);
       }
     }
